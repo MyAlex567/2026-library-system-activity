@@ -3,6 +3,7 @@ declare(strict_types=1);
 use App\Config\DatabaseConfig;
 use App\Config\LibraryConfig;
 use App\Service\LibraryService;
+use App\Exception\DatabaseException;
 
 class BorrowRepository{
     private $connection;
@@ -57,7 +58,7 @@ class BorrowRepository{
 
         }catch(\PDOException $error){
             $this->connection->rollBack();
-            throw new RuntimeException("Returned Book Failed: " . $error->getMessage());
+            throw new DatabaseException("Returned Book Failed: " . $error->getMessage());
         }
     }
 }

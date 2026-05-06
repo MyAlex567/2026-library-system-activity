@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Config\DatabaseConfig;
+use App\Exception\DatabaseException;
 
 class LibraryReport{
     private $connection;
@@ -39,9 +40,7 @@ class LibraryReport{
             return $report;
 
         }catch(\PDOException $error){
-
-            error_log("Error: failed to generate report: " . $error->getMessage());
-            return [];
+            throw new DatabaseException("Failed to Generate Report: " . $error->getMessage());
         }
     }
 }

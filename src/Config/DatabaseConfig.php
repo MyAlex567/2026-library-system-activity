@@ -6,6 +6,7 @@ namespace App\Config;
 use PDO;
 use PDOException;
 use RuntimeException;
+use App\Exception\DatabaseException;
 
 class DatabaseConfig{
     private PDO $connection;
@@ -37,7 +38,7 @@ class DatabaseConfig{
          
             
         }catch(PDOException $error){
-            throw new RuntimeException("Database connection failed: " . $error->getMessage());
+            throw new DatabaseException("Database connection failed: " . $error->getMessage());
         }
     }
 

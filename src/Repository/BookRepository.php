@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use App\Config\DatabaseConfig;
 use App\Entity\Book;
+use App\Exception\DatabaseException;
 
 class BookRepository{
     private $connection;
@@ -47,7 +48,7 @@ class BookRepository{
         return $book;
     }
 
-    public function searchBooks(string $keyword): ?array
+    public function searchBooks(string $keyword): array
     {
         try{
             $sql = "SELECT * FROM books WHERE title LIKE :keyword OR author LIKE :keyword";
@@ -58,24 +59,21 @@ class BookRepository{
             $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
             $books = [];
-
-            if($result){
-                foreach($result as $value){
-                    $books[] = new Book(
-                        $value['title'], 
-                        $value['author'], 
-                        $value['year'],
-                        $value['genre'],
-                        $value['book_id']
-                    );
-                }
+            foreach($result as $value){
+                $books[] = new Book(
+                    $value['title'], 
+                    $value['author'], 
+                    $value['year'],
+                    $value['genre'],
+                    $value['book_id']
+                );
             }
+
 
             return $books;
 
         }catch(\PDOException $error){
-            error_log($error->getMessage());
-            return null;
+            throw new DatabaseException("Search Failed: " . $error->getMessage());
         }
     }
 
@@ -89,8 +87,7 @@ class BookRepository{
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         }catch(\PDOException $error){
-            error_log($error->getMessage());
-            return [];
+            throw new DatabaseException("Failed to fetch the books: " . $error->getMessage());
         }
     }
 

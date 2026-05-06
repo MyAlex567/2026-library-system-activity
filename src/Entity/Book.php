@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace App\Entity;
+use App\Exception\ValidationException;
 
 class Book{
     private ?int $bookId;
@@ -17,6 +18,11 @@ class Book{
         string $genre, 
         ?int $bookId = null
     ){
+
+        if($year < 1000 || $year > (int)date('Y')){
+            throw new ValidationException("Invalid Publication Year: " . $year);
+        }
+
         $this->title = $title;
         $this->author = $author;
         $this->year = $year;
