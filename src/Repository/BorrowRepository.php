@@ -56,6 +56,7 @@ class BorrowRepository{
             return $fine;
 
         }catch(\PDOException $error){
+            $this->connection->rollBack();
             throw new RuntimeException("Returned Book Failed: " . $error->getMessage());
         }
     }
