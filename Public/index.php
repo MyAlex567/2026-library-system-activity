@@ -14,6 +14,16 @@ $bookrepo = new BookRepository($database);
 $message = '';
 $messageType = '';
 
+if(isset($_POST['BookList']) && $_SERVER['REQUEST_METHOD'] === 'POST'){
+    header('Location: ' . '../src/View/Book_list.php');
+    exit();
+}
+
+if(isset($_POST['borrow_book']) && $_SERVER['REQUEST_METHOD'] === 'POST'){
+    header('Location: ' . '../src/View/Borrow_form.php');
+    exit();
+}
+
 if(isset($_POST['addbook']) && $_SERVER['REQUEST_METHOD'] === 'POST'){
     try{
         $bookData = [
@@ -77,18 +87,17 @@ if(isset($_SESSION['message'])){
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        .addBook-header{
-            background-color: hsl(129, 100%, 41%);
+        .headers{
+            background-color: #68ff7f;
             border-radius: 5px;
             padding: 10px;
         }
 
         .addbook_form{
-            border: 1px solid;
             border-radius: 10px;
             padding: 30px;
             font-size: 1.2rem;
-            width: 500px;
+            width: 50%;
         }
 
         .bookInfo{
@@ -107,7 +116,7 @@ if(isset($_SESSION['message'])){
 
         .bookInfo button{
             width: 100%;
-            background-color: hsl(129, 90%, 48%);
+            background-color: #68ff7f;
             width: 100%;
             padding: 10px;
             box-sizing: border-box;
@@ -115,6 +124,10 @@ if(isset($_SESSION['message'])){
             border-radius: 5px;
             font-size: 1.2rem;
             cursor: pointer;
+        }
+
+        .bookInfo button:hover{
+            background-color: hsl(129, 100%, 50%);
         }
 
         .message {
@@ -135,48 +148,85 @@ if(isset($_SESSION['message'])){
             border: 1px solid #f5c6cb;
         }
 
-    </style>s
+        .form-container{
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            display: flex;
 
+        }
 
+        .other-function-container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 50%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .function-container{
+            width: 100%;
+        }
+
+    </style>
 
 </head>
 <body>
 
     <h1>2026-libray-system</h1>
 
-    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST" class="addbook_form">
-        <h3 class="addBook-header">Add Book</h3>
-        <?php if($message): ?>
-            <div class="message <?php echo $messageType; ?>">
-                <?php echo $message; ?>
+    <div class="form-container">
+        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST" class="addbook_form">
+            <h3 class="headers">Add Book</h3>
+            <?php if($message): ?>
+                <div class="message <?php echo $messageType; ?>">
+                    <?php echo $message; ?>
+                </div>
+            <?php endif; ?>
+
+            <div class="bookInfo">
+                <label for="book_title">Title: </label>
+                <input type="text" placeholder="enter the title" name="book_title" id="book_title">
             </div>
-        <?php endif; ?>
 
-        <div class="bookInfo">
-            <label for="book_title">Title: </label>
-            <input type="text" placeholder="enter the title" name="book_title">
+            <div class="bookInfo">
+                <label for="book_author">Author: </label>
+                <input type="text" placeholder="enter the author" name="book_author" id="book_author">
+            </div>
+
+            <div class="bookInfo">
+                <label for="book_genre">Genre: </label>
+                <input type="text" placeholder="enter the genre" name="book_genre" id="book_genre">
+            </div>
+
+
+            <div class="bookInfo">
+                <label for="book_year">Year: </label>
+                <input type="int" placeholder="enter the Year" name="book_year" id="book_year">
+            </div>
+
+            <div class="bookInfo">
+                <button type="submit" name="addbook">Add Book</button>
+            </div>
+
+        </form>
+
+        <div class="other-function-container">
+            <h3 class="headers">OTHER FUNCTIONS</h3>
+            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST" class="function-container">
+                <div class="bookInfo">
+                    <button type="submit" name="BookList">View Book</button>
+                </div>
+
+                <div class="bookInfo">
+                    <button type="submit" name="borrow_book">Borrow Book</button>
+                </div>
+
+            </form>
         </div>
 
-        <div class="bookInfo">
-            <label for="book_author">Author: </label>
-            <input type="text" placeholder="enter the author" name="book_author">
-        </div>
-
-        <div class="bookInfo">
-            <label for="book_genre">Genre: </label>
-            <input type="text" placeholder="enter the genre" name="book_genre">
-        </div>
-
-
-        <div class="bookInfo">
-            <label for="book_year">Year: </label>
-            <input type="int" placeholder="enter the Year" name="book_year">
-        </div>
-
-        <div class="bookInfo">
-            <button type="submit" name="addbook">Add Book</button>
-        </div>
-    </form>
+    </div>
     
 </body>
 </html>

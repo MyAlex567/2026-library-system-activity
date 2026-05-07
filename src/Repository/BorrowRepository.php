@@ -1,9 +1,12 @@
 <?php
 declare(strict_types=1);
+namespace App\Repository;
+
 use App\Config\DatabaseConfig;
 use App\Config\LibraryConfig;
 use App\Service\LibraryService;
 use App\Exception\DatabaseException;
+use DateTime; 
 
 class BorrowRepository{
     private $connection;
@@ -14,15 +17,15 @@ class BorrowRepository{
     
     public function borrowBook(int $StudentId, int $bookId, int $days): int{
         $dueDate = date('Y-m-d', strtotime('+' . $days . ' days'));
-        $sql = "INSERT INTO borrow_records(studentId, bookId, borrowDate, dueDate, status) 
-                VALUES(:studentId, :bookId, :borrowDate, :dueDate, :status)";
+        $sql = "INSERT INTO borrow_records(student_id, book_id, borrow_date, due_date, status) 
+                VALUES(:student_id, :book_id, :borrow_date, :due_date, :status)";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute([
-            'studentId' => $StudentId,
-            'bookId' => $bookId,
-            'borrowDate' => date('Y-m-d'),
-            'dueDate' => $dueDate,
-            'status' => 'borrowed'
+            'student_id' => $StudentId,
+            'book_id' => $bookId,
+            'borrow_date' => date('Y-m-d'),
+            'due_date' => $dueDate,
+            'status' => LibraryConfig::STATUS_BORROWED
         ]);
 
         return (int) $this->connection->lastInsertId();
@@ -32,10 +35,10 @@ class BorrowRepository{
         try{
             $this->connection->beginTransaction();
             
-            $sql = "SELECT * FROM borrowRecords WHERE recordId = :recordId";
+            $sql = "SELECT * FROM borrow_records WHERE record_id = :record_id";
             $stmt = $this->connection->prepare($sql);
             $stmt->execute([
-                'recordId' => $recordId
+                'record_id' => $recordId
             ]);
 
             $result = $stmt->fetch(\PDO::FETCH_ASSOC);
