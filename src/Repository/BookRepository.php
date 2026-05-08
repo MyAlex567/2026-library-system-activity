@@ -7,13 +7,47 @@ use App\Config\DatabaseConfig;
 use App\Entity\Book;
 use App\Exception\DatabaseException;
 
+/**
+ * BookRepository
+ *
+ * Handles all database operations related to Book entities.
+ * Acts as the data access layer between the application and the database.
+ *
+ * Responsibilities:
+ * - Insert new books
+ * - Retrieve single book records
+ * - Search books by keyword
+ * - List all books
+ *
+ * @author lisayAlex
+ * @since 2026-05-08
+ */
 class BookRepository{
+
+    /**
+     * @var \PDO Database connection instance
+     */
     private $connection;
 
-    public function __construct(DatabaseConfig $database){
+    /**
+     * Initializes repository with database connection.
+     *
+     * @param DatabaseConfig $database Database configuration object
+     */
+    public function __construct(DatabaseConfig $database)
+    {
         $this->connection = $database->getConnection();
     }
 
+    /**
+     * Inserts a new book into the database.
+     *
+     * @param Book $book Book entity to be stored
+     *
+     * @return int Returns the newly generated book ID
+     *
+     * @throws DatabaseException If database operation fails
+     */
     public function addBook(Book $book): ?int
     {
         
@@ -29,6 +63,15 @@ class BookRepository{
         return (int) $this->connection->lastInsertId();
     }
 
+    /**
+     * Retrieves a single book by ID.
+     *
+     * @param int $bookId Book identifier
+     *
+     * @return Book Returns Book entity
+     *
+     * @throws DatabaseException If query fails or book not found
+     */
     public function getBook(int $bookId): Book
     {
         $sql = "SELECT * FROM books WHERE bookId = :bookId";
@@ -50,6 +93,15 @@ class BookRepository{
         return $book;
     }
 
+    /**
+     * Searches books by title or author keyword.
+     *
+     * @param string $keyword Search term
+     *
+     * @return Book[] Array of matching Book entities
+     *
+     * @throws DatabaseException If query fails
+     */
     public function searchBooks(string $keyword): array
     {
         try{
@@ -79,6 +131,13 @@ class BookRepository{
         }
     }
 
+    /**
+     * Retrieves all books from the database.
+     *
+     * @return array List of books as associative arrays
+     *
+     * @throws DatabaseException If query fails
+     */
     public function listBooks(): array
     {
         try{
