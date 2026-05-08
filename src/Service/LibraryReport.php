@@ -5,14 +5,51 @@ namespace App\Service;
 use App\Config\DatabaseConfig;
 use App\Exception\DatabaseException;
 
-class LibraryReport{
+/**
+ * LibraryReport Service
+ *
+ * Responsible for generating summary reports of the library system.
+ * returned books, and accumulated fines.
+ *
+ * Responsibilities:
+ * - Generate library statistics
+ * - Aggregate book and borrowing data
+ * - Compute total fines collected
+ *
+ * @author lisayAlex
+ * @since 2026-05-08
+ */
+class LibraryReport
+{
+
+    /**
+     * @var \PDO Database connection instance
+     */
     private $connection;
 
+    /**
+     * Initializes report service with database connection.
+     *
+     * @param DatabaseConfig $database Database configuration instance
+     */
     public function __construct(DatabaseConfig $database)
     {
         $this->connection = $database->getConnection();
     }
 
+    /**
+     * Generates library summary report.
+     *
+     * The report includes:
+     * - Total number of books
+     * - Total borrowed books
+     * - Total returned books
+     * - Total fines collected
+     *
+     * @return array Associative array containing report statistics
+     *
+     * @throws DatabaseException If any database query fails
+     */
     public function generateReport(): array{
         try{
             $report = [];

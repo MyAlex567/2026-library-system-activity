@@ -6,15 +6,38 @@ use App\Repository\BookRepository;
 use App\Config\DatabaseConfig;
 use App\Exception\DatabaseException;
 
+/**
+ * Book List Page
+ *
+ * Displays all books stored in the library database.
+ * Acts as a simple presentation layer that retrieves data
+ * from the BookRepository and renders it in an HTML table.
+ *
+ * Responsibilities:
+ * - Fetch list of books from repository
+ * - Handle empty state display
+ * - Render book data in table format
+ *
+ * @author lisayAlex
+ * @since 2026-05-08
+ */
+
 $database = new DatabaseConfig();
 $bookrepo = new BookRepository($database);
 
+
+/**
+ * @var array List of books retrieved from database
+ */
 $bookList = [];
 
 try{
     $bookList = $bookrepo->listBooks();
 }catch(DatabaseException $error){
-
+    /**
+     * Optional: log error or handle gracefully
+     * Still no idea here
+     */
 }
 
 

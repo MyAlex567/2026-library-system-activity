@@ -8,18 +8,66 @@ use PDOException;
 use RuntimeException;
 use App\Exception\DatabaseException;
 
-class DatabaseConfig{
+/**
+ * 
+ * Database configuration and connection handler
+ * 
+ * This connection PDO connection to MySQL with predefined constants
+ * for configuration
+ * 
+ * 
+ * @author lisayAlex
+ * @since 2026-05-08
+ * 
+ */
+
+class DatabaseConfig
+{
+    /**
+     * @var PDO Active PDO database connection instance
+     */
     private PDO $connection;
 
+    /**
+     * @var string Database host
+     */
     private const HOSTNAME = 'localhost';
+
+    /**
+     * @var string Database username
+     */
     private const USERNAME = 'root';
+
+    /**
+     * @var string Database password
+     */
     private const PASSWORD = '';
+
+    /**
+     * @var string Database name
+     */
     private const DBNAME = 'library_db';
 
-    public function __construct(){
+    /**
+     * Initializes database connection automatically.
+     */
+    public function __construct()
+    {
         $this->connect();
     }
 
+    /**
+     * Established PDO connection to the database
+     * 
+     * Uses Mysql DSN with UTF-8 encoding and secure PDO options:
+     * - ERRMODE_EXCEPTION for error handling
+     * - FETCH_ASSOC for associative arrays
+     * - disables emulated prepared statements
+     * 
+     * @return void
+     * 
+     * @throws DatabaseException if connection fails
+     */
     private function connect(): void 
     {
         try{
@@ -42,6 +90,11 @@ class DatabaseConfig{
         }
     }
 
+    /**
+     * Returns activve database connection instance
+     * 
+     * @return PDO The active PDO connection
+     */
     public function getConnection(): PDO
     {
         return $this->connection;

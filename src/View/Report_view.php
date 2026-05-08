@@ -7,17 +7,42 @@ use App\Config\DatabaseConfig;
 use App\Config\LibraryConfig;
 use App\Service\LibraryService;
 
+/**
+ * Library Report Page
+ *
+ * Displays statistical reports and overdue book listings
+ * for the library system.
+ * 
+ * Responsibilities:
+ * - Display library statistics (books, borrowed, returned, fines)
+ * - Display overdue books with computed fines
+ *
+ * @author lisayAlex
+ * @since 2026-05-08
+ */
+
 $database = new DatabaseConfig();
 $LibraryReport = new LibraryReport($database);
 $libraryService = new LibraryService($database);
 
+/**
+ * @var array Report summary data
+ */
 $reports = [];
+
+/**
+ * @var array List of overdue books
+ */
 $overDueBooks = [];
 
 try{
     $reports = $LibraryReport->generateReport();
     $overDueBooks = $libraryService->getOverdueBooks();
 
+    /**
+     * Compute fine amount for each overdue book
+     * Only calculates if fine_amount is not yet set
+     */
     for($index = 0; $index < count($overDueBooks); $index++){
         $overDueBooks[$index]['fine_amount'] = $overDueBooks[$index]['fine_amount'] ?? 
                                             $libraryService->calculateOverduefine(
@@ -25,7 +50,7 @@ try{
     }
 
 }catch(PDOException){
-
+    // No idea here yeat (optional)
 }
 
 ?>

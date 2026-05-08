@@ -8,27 +8,63 @@ use App\Repository\BookRepository;
 use App\Entity\Book;
 use App\Exception\ValidationException;
 
+/**
+ * Library System Main Controller
+ * 
+ * Handles Book Adding, Navgigation of different method
+ * Acts as the entry point for book-related actions
+ * 
+ * Responsibilities
+ * - Add new books to the System
+ * - Redirect to book list, borrow form, and reports
+ * - Handle flash messaging via session if success or erro in adding book
+ * 
+ * @author lisayAlex
+ * @since 2026-05-08
+ */
+
 $database = new DatabaseConfig();
 $bookrepo = new BookRepository($database);
 
+/**
+ * @var string flash message content
+ */
 $message = '';
+
+/**
+ * @var string flash message type (success or error)
+ */
 $messageType = '';
 
+/**
+ * Redirect to Book List page
+ */
 if(isset($_POST['BookList']) && $_SERVER['REQUEST_METHOD'] === 'POST'){
     header('Location: ' . '../src/View/Book_list.php');
     exit();
 }
 
+/**
+ * Redirect to Borrow Book page
+ */
 if(isset($_POST['borrow_book']) && $_SERVER['REQUEST_METHOD'] === 'POST'){
     header('Location: ' . '../src/View/Borrow_form.php');
     exit();
 }
 
+/**
+ * Redirect to Library Report page
+ */
 if(isset($_POST['report_view']) && $_SERVER['REQUEST_METHOD'] === 'POST'){
     header('Location: ' . '../src/View/Report_view.php');
     exit();
 }
 
+/**
+ * Handles adding a new book
+ * 
+ * @throws ValidationException If validation fails in entity or repository
+ */
 if(isset($_POST['addbook']) && $_SERVER['REQUEST_METHOD'] === 'POST'){
     try{
         $bookData = [

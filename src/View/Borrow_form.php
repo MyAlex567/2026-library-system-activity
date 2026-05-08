@@ -5,12 +5,36 @@ require_once __DIR__ . '../../../vendor/autoload.php';
 
 use App\Repository\BorrowRepository;
 use App\Config\DatabaseConfig;
-use App\Exception\ValidationException;
+
+/**
+ * Borrow Book Page
+ *
+ * Handles the borrowing process of books in the library system.
+ * This page acts as a controller + view hybrid that:
+ * - Accepts user input (student ID, book ID, borrow days)
+ * - Calls BorrowRepository to process borrowing
+ * - Displays success or error messages using session flash data
+ *
+ * Responsibilities:
+ * - Process borrow requests
+ * - Validate input (basic casting)
+ * - Display feedback messages
+ *
+ * @author lisayAlex
+ * @since 2026-05-08
+ */
 
 $database = new DatabaseConfig();
 $borrowrepo = new BorrowRepository($database);
 
+/**
+ * @var string Message to display to user
+ */
 $message = '';
+
+/**
+ * @var string Message type (success/error)
+ */
 $messageType = '';
 
 if(isset($_POST['borrowBook']) && $_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -40,6 +64,9 @@ if(isset($_POST['borrowBook']) && $_SERVER['REQUEST_METHOD'] === 'POST'){
     exit();
 }
 
+/**
+ * Load flash message from session
+ */
 if(isset($_SESSION['message'])){
     $message = $_SESSION['message'];
     $messageType = $_SESSION['messageType'];
