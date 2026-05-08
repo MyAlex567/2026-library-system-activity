@@ -24,6 +24,11 @@ if(isset($_POST['borrow_book']) && $_SERVER['REQUEST_METHOD'] === 'POST'){
     exit();
 }
 
+if(isset($_POST['report_view']) && $_SERVER['REQUEST_METHOD'] === 'POST'){
+    header('Location: ' . '../src/View/Report_view.php');
+    exit();
+}
+
 if(isset($_POST['addbook']) && $_SERVER['REQUEST_METHOD'] === 'POST'){
     try{
         $bookData = [
@@ -221,6 +226,10 @@ if(isset($_SESSION['message'])){
 
                 <div class="bookInfo">
                     <button type="submit" name="borrow_book">Borrow Book</button>
+                </div>
+
+                <div class="bookInfo">
+                    <button type="submit" name="report_view">Library Report</button>
                 </div>
 
             </form>
